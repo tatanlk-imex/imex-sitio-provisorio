@@ -146,6 +146,27 @@
     inp.form && inp.form.addEventListener("submit", function (e) { e.preventDefault(); buscar(inp.value); });
   }
 
+  // Boletín (pie): mismo mecanismo que el formulario (servicio o correo)
+  var bol = document.getElementById("form-boletin");
+  if (bol) {
+    bol.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!bol.checkValidity()) { bol.reportValidity(); return; }
+      var d = { origen: "boletin", correo: bol.elements.correo.value, region: bol.elements.region.value, tipo: bol.elements.tipo.value, pagina: location.href };
+      var m = document.getElementById("boletin-mensaje");
+      function ok(t) { m.className = "aviso aviso-ok"; m.textContent = t; m.hidden = false; }
+      evento("suscribir_boletin", { region: d.region, tipo: d.tipo });
+      if (C.FORM_ENDPOINT) {
+        fetch(C.FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(d) })
+          .then(function (r) { if (!r.ok) { throw new Error(); } bol.reset(); ok("¡Listo! Te avisaremos de las novedades de tu zona."); })
+          .catch(function () { m.className = "aviso aviso-error"; m.textContent = "No pudimos registrar tu correo. Escríbenos a " + C.CORREO_COTIZACIONES + "."; m.hidden = false; });
+      } else {
+        window.location.href = "mailto:" + C.CORREO_COTIZACIONES + "?subject=" + encodeURIComponent("Suscripción al boletín de Imex") + "&body=" + encodeURIComponent("Correo: " + d.correo + "\nRegión: " + d.region + "\nTipo de cliente: " + d.tipo);
+        ok("Se abrió tu programa de correo con la suscripción lista. Solo debes presionar Enviar.");
+      }
+    });
+  }
+
   // Formulario de cotización
   var form = document.getElementById("form-cotizacion");
   if (form) {
