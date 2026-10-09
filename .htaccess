@@ -1,0 +1,17 @@
+# Redirecciones del sitio antiguo (WordPress) al nuevo. Apache o LiteSpeed.
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ https://www.imex.cl/$1 [L,R=301]
+RedirectMatch 301 ^/tienda/?$ /catalogo/
+RedirectMatch 301 ^/tienda/?$ /catalogo/
+RedirectMatch 301 ^/catalogo-dactic/?$ /catalogos/
+RedirectMatch 301 ^/catalogo-ferretero/?$ /catalogos/
+RedirectMatch 301 ^/catalogo-pilot/?$ /catalogos/
+RedirectMatch 301 ^/politicas-de-privacidad/?$ /politica-de-privacidad/
+RedirectMatch 301 ^/mapa-contenido/?$ /mapa-del-sitio/
+RedirectMatch 301 ^/marca/adix/?$ /marcas/adix/
+RedirectMatch 301 ^/marca/pilot/?$ /marcas/pilot/
+RedirectMatch 301 ^/marca/toys/?$ /marcas/toys/
+RedirectMatch 301 ^/marca/wenno/?$ /marcas/wenno/
+ErrorDocument 404 /404.html
