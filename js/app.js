@@ -23,8 +23,9 @@
     });
   }
 
-  // Google Analytics (solo si está configurado)
-  if (C.GA4_ID) {
+  // Google Analytics: solo si está configurado y la persona aceptó las cookies de medición
+  function cargarGA() {
+    if (!C.GA4_ID || window.gtag) { return; }
     var s = document.createElement("script");
     s.async = true;
     s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(C.GA4_ID);
@@ -32,7 +33,25 @@
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag("js", new Date());
-    window.gtag("config", C.GA4_ID);
+    window.gtag("config", C.GA4_ID, { anonymize_ip: true });
+  }
+  function leerConsentimiento() { try { return localStorage.getItem("imex_cookies"); } catch (e) { return null; } }
+  function guardarConsentimiento(v) { try { localStorage.setItem("imex_cookies", v); } catch (e) {} }
+  if (C.GA4_ID) {
+    var cons = leerConsentimiento();
+    if (cons === "si") { cargarGA(); }
+    else if (cons !== "no") {
+      var av = document.createElement("div");
+      av.className = "aviso-cookies"; av.setAttribute("role", "dialog"); av.setAttribute("aria-label", "Uso de cookies");
+      av.innerHTML = '<p>Usamos cookies de medición (Google Analytics) para saber qué páginas sirven más. No usamos cookies de publicidad. <a href="' + RAIZ + 'politica-de-privacidad/">Política de privacidad</a>.</p><div><button type="button" class="btn btn-peq" data-cookies="si">Aceptar</button><button type="button" class="btn btn-peq btn-sec" data-cookies="no">Rechazar</button></div>';
+      document.body.appendChild(av);
+      av.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-cookies]"); if (!b) { return; }
+        guardarConsentimiento(b.getAttribute("data-cookies"));
+        if (b.getAttribute("data-cookies") === "si") { cargarGA(); }
+        av.remove();
+      });
+    }
   }
   function evento(nombre, datos) { if (window.gtag) { window.gtag("event", nombre, datos || {}); } }
   document.addEventListener("click", function (e) {
@@ -119,11 +138,19 @@
   if (caja) {
     var inp = document.getElementById("filtro-texto"), cuenta = document.getElementById("contador"), indice = null;
     var norm = function (t) { return (t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); };
+    var filtro = { marca: "", uso: "" };
+    var chipsM = Array.prototype.slice.call(document.querySelectorAll(".chip[data-marca-filtro]"));
+    var chipsU = Array.prototype.slice.call(document.querySelectorAll(".chip[data-uso-filtro]"));
+    function marcarChip(lista, attr, valor) { lista.forEach(function (c) { c.setAttribute("aria-pressed", c.getAttribute(attr) === valor ? "true" : "false"); }); }
     var pintar = function (q) {
       caja.innerHTML = "";
       var palabras = norm(q).split(/\s+/).filter(Boolean);
-      if (!palabras.length) { if (cuenta) { cuenta.textContent = ""; } return; }
-      var hallados = indice.filter(function (p) { return palabras.every(function (w) { return p.b.indexOf(w) > -1; }); });
+      if (!palabras.length && !filtro.marca && !filtro.uso) { if (cuenta) { cuenta.textContent = ""; } return; }
+      var hallados = indice.filter(function (p) {
+        if (filtro.marca && norm(p.c) !== norm(filtro.marca)) { return false; }
+        if (filtro.uso && p.s.indexOf(filtro.uso) < 0) { return false; }
+        return palabras.every(function (w) { return p.b.indexOf(w) > -1; });
+      });
       if (cuenta) { cuenta.textContent = hallados.length + (hallados.length === 1 ? " producto" : " productos") + (hallados.length > 60 ? " (se muestran los primeros 60)" : ""); }
       hallados.slice(0, 60).forEach(function (p) {
         var li = document.createElement("li"), a = document.createElement("a"), im = document.createElement("img"), s = document.createElement("span");
@@ -136,11 +163,16 @@
     var buscar = function (q) {
       if (indice) { pintar(q); return; }
       fetch(RAIZ + "buscar.json").then(function (r) { return r.json(); }).then(function (d) {
-        indice = d.map(function (x) { return { n: x[0], c: x[1], u: x[2], i: x[3], b: norm(x[0] + " " + x[1] + " " + x[4]) }; }); pintar(q);
+        indice = d.map(function (x) { return { n: x[0], c: x[1], u: x[2], i: x[3], s: (x[5] || "").split(" "), b: norm(x[0] + " " + x[1] + " " + x[4]) }; }); pintar(q);
       });
     };
+    chipsM.forEach(function (c) { c.addEventListener("click", function () { filtro.marca = c.getAttribute("data-marca-filtro"); marcarChip(chipsM, "data-marca-filtro", filtro.marca); buscar(inp.value); }); });
+    chipsU.forEach(function (c) { c.addEventListener("click", function () { filtro.uso = c.getAttribute("data-uso-filtro"); marcarChip(chipsU, "data-uso-filtro", filtro.uso); buscar(inp.value); }); });
     var qs = new URLSearchParams(window.location.search);
-    if (qs.get("q")) { inp.value = qs.get("q"); buscar(qs.get("q")); }
+    if (qs.get("marca")) { filtro.marca = qs.get("marca"); marcarChip(chipsM, "data-marca-filtro", filtro.marca); }
+    if (qs.get("uso")) { filtro.uso = qs.get("uso"); marcarChip(chipsU, "data-uso-filtro", filtro.uso); }
+    if (qs.get("q")) { inp.value = qs.get("q"); }
+    if (qs.get("q") || filtro.marca || filtro.uso) { buscar(inp.value); }
     var t0;
     inp.addEventListener("input", function () { clearTimeout(t0); t0 = setTimeout(function () { buscar(inp.value); }, 200); });
     inp.form && inp.form.addEventListener("submit", function (e) { e.preventDefault(); buscar(inp.value); });

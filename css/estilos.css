@@ -352,3 +352,9 @@ details .resp{padding:0 18px 16px;color:var(--gris-9)}
 .boletin-campos{display:grid;grid-template-columns:2fr 1.2fr 1.2fr auto;gap:10px;align-items:center}
 .boletin input,.boletin select{font:inherit;padding:10px 12px;border:1.5px solid #55555C;border-radius:10px;min-height:44px;background:#fff;color:var(--negro);width:100%}
 @media (max-width:760px){.boletin-campos{grid-template-columns:1fr}}
+
+.aviso-cookies{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:180;width:min(720px,calc(100vw - 24px));background:#fff;border:1px solid var(--gris-2);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.92rem}
+.aviso-cookies p{margin:0;flex:1;min-width:220px}
+.aviso-cookies div{display:flex;gap:8px}
+@media (max-width:760px){.aviso-cookies{bottom:70px}}
+.filtros .meta{margin:0 4px 0 0}
