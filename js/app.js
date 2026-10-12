@@ -89,6 +89,19 @@
     });
   });
 
+  // Otros videos del producto: al hacer clic se cargan en el reproductor principal (sin salir de la página)
+  document.querySelectorAll("[data-video-alt]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var v = document.querySelector(".video"); if (!v) { return; }
+      e.preventDefault(); var id = a.getAttribute("data-video-alt");
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0"; f.title = "Video del producto";
+      f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
+      v.innerHTML = ""; v.appendChild(f); v.scrollIntoView({ behavior: "smooth", block: "center" });
+      evento("video_producto", { video_id: id, pagina: location.pathname });
+    });
+  });
+
   // Pestañas de producto (sin JavaScript se ven todas las secciones seguidas)
   var pest = document.querySelector(".pestanas");
   if (pest) {
