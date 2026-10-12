@@ -344,8 +344,8 @@ details .resp{padding:0 18px 16px;color:var(--gris-9)}
 @media (max-width:760px){.hero-logos{grid-template-columns:repeat(3,1fr);gap:8px}.hero-logos a{padding:8px}.franja-logos a{width:calc(50% - 7px)}}
 
 .hero-logos.cinco{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
-.hero-logos.cinco a{width:calc(33.33% - 10px);aspect-ratio:1/1}
-@media (max-width:760px){.hero-logos.cinco a{width:calc(33.33% - 6px)}}
+.hero-logos.cinco a{width:calc(25% - 11px);aspect-ratio:1/1}
+@media (max-width:760px){.hero-logos.cinco a{width:calc(25% - 8px)}}
 .galeria .video{margin-top:14px}
 
 .boletin{border-top:1px solid #3a3a40;margin-top:30px;padding-top:22px}

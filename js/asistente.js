@@ -10,7 +10,7 @@
   // Cada opción: [texto visible, siguiente nodo, clave opcional para recomendar]
   var PLAZO = { q: "¿Para cuándo lo necesitas?", key: "Plazo", opts: [["Lo antes posible", "extra"], ["Para la temporada 2027 (marzo)", "extra"], ["En los próximos meses", "extra"], ["Solo estoy averiguando", "extra"]] };
   var F = {
-    inicio: { q: "¡Hola! Soy el asistente de Imex. Te hago unas preguntas rápidas para orientarte y que tu solicitud llegue completa a la persona correcta. ¿Qué necesitas?", key: "Necesidad", opts: [
+    inicio: { q: "¡Hola! Soy el asistente de Imex. Te hago unas preguntas rápidas para orientarte y que tu solicitud llegue completa a la persona correcta. Al final te pido tu correo, teléfono o WhatsApp para contactarte. ¿Qué necesitas?", key: "Necesidad", opts: [
       ["Surtir mi tienda o librería (material escolar y de oficina)", "cli", "esc"], ["Hacerme distribuidor de Imex", "dist_zona", "dist"], ["Material didáctico para colegio, jardín o institución", "did_tipo", "did"],
       ["Importar o distribuir Dactic en el extranjero", "exp_pais", "exp"], ["Equipos HSM, cuchillos Olfa o arriendo de equipos", "ind_prod", "ind"], ["Regalos para colaboradores o clientes", "reg_cant", "reg"],
       ["Una licitación o compra pública", "lic", "lic"], ["Saber dónde comprar un producto", "donde", "donde"], ["Otra consulta", "plazo", "otro"]] },
@@ -22,7 +22,7 @@
     did_tipo: { q: "¿Para quién es?", key: "Cliente", opts: [["Colegio o jardín infantil", "did_lin"], ["Compra pública o licitación", "did_lin"], ["Tienda o distribuidor", "did_lin"], ["Otro", "did_lin"]] },
     did_lin: { q: "¿Qué área te interesa?", key: "Área", opts: [["Estimulación temprana y motricidad", "plazo"], ["Juegos de salón y matemáticos (Dactic, Smart Games)", "plazo"], ["Instrumentos musicales y juego de roles", "plazo"], ["Mobiliario y espacios", "plazo"], ["No lo sé, necesito orientación", "plazo"]] },
     exp_pais: { q: "¿Desde qué país nos escribes?", key: "País", input: "text", next: "exp_tipo", ph: "País y ciudad" },
-    exp_tipo: { q: "¿Qué buscas?", key: "Interés", opts: [["Importar Dactic Games", "plazo"], ["Distribuir o representar Dactic", "plazo"], ["Otras marcas de Imex", "plazo"]] },
+    exp_tipo: { q: "¿Qué buscas?", key: "Interés", opts: [["Importar Dactic Games", "plazo"], ["Distribuir o representar Dactic", "plazo"], ["Importar artículos escolares y de oficina (Adix, Creative, Neolite)", "plazo"], ["Otras marcas de Imex", "plazo"]] },
     ind_prod: { q: "¿Qué te interesa?", key: "Producto industrial", opts: [["Destructoras, prensas o ProfiPack (HSM)", "ind_mod"], ["Cuchillos y repuestos (Olfa)", "ind_mod"], ["Arriendo de equipos HSM", "ind_mod"], ["Línea de seguridad industrial", "ind_mod"]] },
     ind_mod: { q: "¿Compras para tu empresa o para revender?", key: "Uso", opts: [["Para mi empresa", "plazo"], ["Para revender", "plazo"], ["No lo sé aún", "plazo"]] },
     reg_cant: { q: "¿Para cuántas personas son los regalos?", key: "Cantidad", opts: [["Hasta 50", "reg_pres"], ["Entre 50 y 300", "reg_pres"], ["Más de 300", "reg_pres"]] },
@@ -44,7 +44,7 @@
       esc: ["Te orientaría a nuestra línea de material escolar y de oficina.", "soluciones/material-escolar-y-oficina/", "Ver material escolar y de oficina"],
       dist: ["Cuéntanos tu zona y tu tipo de negocio y te explicamos cómo trabajar con Imex.", "distribuidores/", "Ver cómo ser distribuidor"],
       did: ["Para colegios, jardines e instituciones tenemos la línea de aprendizaje y entretenimiento (Dactic).", "soluciones/aprendizaje-y-entretenimiento/", "Ver aprendizaje y entretenimiento"],
-      exp: ["Exportamos Dactic y Dactic Games; te enviamos el catálogo de exportación.", "exportacion/", "Ver exportación"],
+      exp: ["Exportamos Dactic, Dactic Games y artículos escolares y de oficina (Adix, Creative, Neolite); te enviamos el catálogo de exportación.", "exportacion/", "Ver exportación"],
       ind: ["Para HSM y Olfa, revisa la unidad industrial y B2B.", "soluciones/industrial-y-b2b/", "Ver industrial y B2B"],
       reg: ["Para regalos por presupuesto trabajamos con Imex Regalos.", "soluciones/regalos-corporativos/", "Ver regalos corporativos"],
       lic: ["Participamos en compras públicas; revisa cómo trabajamos con Mercado Público.", "licitaciones/", "Ver licitaciones"],
